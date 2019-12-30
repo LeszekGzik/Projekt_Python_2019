@@ -6,6 +6,7 @@ var canvas;
 var ctx;
 var scoreText;
 var score;
+var inputField;
 
 var leftDirection = false;
 var rightDirection = true;
@@ -17,6 +18,14 @@ const LEFT_KEY = 37;
 const RIGHT_KEY = 39;
 const UP_KEY = 38;
 const DOWN_KEY = 40;
+
+var redImg;
+var blueImg;
+var greenImg;
+var orangeImg;
+var purpleImg;
+
+
 
 const partSize=20;
 const startX=60; //starting pos. for test
@@ -36,9 +45,10 @@ var moved =false;
 
 class Point{
 	
-	constructor(x,y){
-		this.x=x;
-		this.y=y;
+	constructor(x,y,img){
+		this.img = img;
+		this.x = x;
+		this.y = y;
 	}
 	
 	setX(x){
@@ -49,6 +59,10 @@ class Point{
 		this.y=y;
 	}
 	
+	setImg(img){
+		this.img = img;
+	}
+	
 	getX(){
 		return this.x;
 	}
@@ -56,15 +70,45 @@ class Point{
 	getY(){
 		return this.y;
 	}
+	
+	getImg(){
+		return this.img;
+	}
+	
+	
 }
 
 class Block{
 	
 	constructor(){
+		//seting random color
+		var img= new Image();
+		var color = Math.floor((Math.random() * 5) + 1);
+		
+		switch(color){
+		case 1:
+			img = redImg;
+			break;	
+		case 2:
+			img = blueImg;
+			break;
+		case 3:
+			img = greenImg;
+			break;
+		case 4:
+			img = orangeImg;
+			break;
+		default:
+			img = purpleImg;
+			break;
+		}
+		
 		this.points= new Array();
 		//this.points= [];
+		//TODO in for change default value of creating points to coordinates out of display area(np. -1)
 		for(var i=0;i<4;i++){
-			this.points.push(new Point(i*partSize, i*partSize));
+			this.points.push(new Point(i*partSize, i*partSize, img));
+			
 		}
 		
 	}
@@ -87,13 +131,14 @@ class Window{
 
 	constructor(){
 		this.allPoints = new Array();
+		//loadImages();
 		this.pointImage = new Image();
 		this.currentBlock = new Block();
 	}
 	  
 	loadImages() {
-
-		this.pointImage.src = "red2.png";
+		
+		//this.pointImage.src = "red2.png";
 	}
 	
 	addBlock(newBlock){
@@ -148,15 +193,22 @@ class Window{
 	
 	getAllPoints(){
 		return this.allPoints;
-	}	
+	}
+	
+	clearAllPoints(){
+		this.allPoints = [];
+	}
 }
 
 
 function init() {
     
 	//scoreText = document.getElementById("score");
-	document.getElementById("score").innerHTML = "YOUR SCORE: "+0;
+	
 	score=0;
+	document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
+	
+	//document.getElementById("inputField")	
 	
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
@@ -180,7 +232,7 @@ function init() {
     purpleImg.src = "purple.png"
     //////////
     
-    
+    //TODO wywalic 3 poniższe nie zakomentowane linijki
     testPoint=new Point(100,50);
     
     testImg = greenImg;
@@ -216,8 +268,10 @@ function doDrawing() {
     if(inGame){
     	
     	for(var i=0; i < gameWindow.getAllPoints().length; i++){
-    		ctx.drawImage(gameWindow.getImage(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);//(img,x,y,width,height)
-        	//ctx.darwImage(pointImg,window.getAllPoints()[i].getX(), window.getAllPoints()[i].getY())
+    		//ctx.drawImage(gameWindow.getImage(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);//(img,x,y,width,height)
+    		ctx.drawImage(gameWindow.getAllPoints()[i].getImg(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);//(img,x,y,width,height)
+        	
+    		//ctx.darwImage(pointImg,window.getAllPoints()[i].getX(), window.getAllPoints()[i].getY())
     		
     	}
     }else{
@@ -228,12 +282,46 @@ function doDrawing() {
 
 function gameOver() {
     
+	inGame=false;
+	
     ctx.fillStyle = 'white';
     ctx.textBaseline = 'middle'; 
     ctx.textAlign = 'center'; 
     ctx.font = 'normal bold 18px serif';
     
     ctx.fillText('Game over', C_WIDTH/2, C_HEIGHT/2);
+    
+    //nick input prompt
+    var nick = prompt("Enter your nick", "NoName");
+
+    //TODO do if wstawic send(nick)
+    if (nick != null) {
+      document.getElementById("input").innerHTML =
+      "Hello " + nick + "! How are you today?";
+      //newGame();
+      //init();//jesli cos innego to nie dziala
+    } 
+    
+}
+ 
+function newGame(){
+	score=0;
+	
+	if(inGame==true){
+		//gameWindow.getAllPoints().clear();
+		gameWindow.clearAllPoints();
+		gameWindow.addBlock(new Block());
+		gameWindow.getBlock().setPosition(testArrayX,testArrayY);
+		//TODO send info about new game
+	}else{
+		gameWindow.clearAllPoints();
+		gameWindow.addBlock(new Block());
+		gameWindow.getBlock().setPosition(testArrayX,testArrayY);
+		
+		inGame = true;
+    	document.getElementById("input").innerHTML="";
+	}
+    //init();
 }
  
 
@@ -241,10 +329,24 @@ function gameOver() {
 function gameCycle() {
 	
     if (inGame) {
-    	ctx.fillText("Game over", 100, 300);
+    	//ctx.fillText("Game over", 100, 300);
         doDrawing();
-        setTimeout("gameCycle()", DELAY);
+        //TODO remove IF
+        //if for testing 
+        if(score==20){
+        	gameWindow.addBlock(new Block());
+        	//score=0;
+        	testArrayX =[1,1,1,1];
+        	testArrayY =[1,2,3,4];
+        }
+        if(score>=30){
+        	score=0;
+        	gameOver();
+        }
+        	
+        
     }
+    setTimeout("gameCycle()", DELAY);
 }
  
 /*
@@ -257,6 +359,11 @@ function send(){
 
 /*
  * wykorzystac metode gameWindow.move(arrayX,arrayY)
+ * 
+ * 
+ * Przy końcu gry wywołac gameOver() lub zmnienic inGame na false
+ * Uwaga najpierwusuwanie wierszy potem nowy blok
+ * ewentualnie ustawic startowe położenie punktow na np. -100 w Y
  */
 function recive(){
 	
@@ -277,26 +384,24 @@ function recive(){
 onkeyup = function(e) {
     
     var key = e.keyCode;
-    
-    if (key == LEFT_KEY) {
+    if(inGame == true){
     	
-        gameWindow.moveTestDisplay(-1,0);
-    }
+    	if (key == LEFT_KEY) {
+        	gameWindow.moveTestDisplay(-1,0);
+    	}
 
-    if (key == RIGHT_KEY) {
-        
-    	gameWindow.moveTestDisplay(1,0);
-    }
+    	if (key == RIGHT_KEY) {    
+    		gameWindow.moveTestDisplay(1,0);
+    	}	
 
-    if (key == UP_KEY) {
-        
-    	gameWindow.moveTestDisplay(0,-1);
-    }
+    	if (key == UP_KEY) {
+    		gameWindow.moveTestDisplay(0,-1);
+    	}	
 
-    if (key == DOWN_KEY) {
-        
-    	gameWindow.moveTestDisplay(0,1);
-    }        
+    	if (key == DOWN_KEY) {
+    		gameWindow.moveTestDisplay(0,1);
+    	}
+    }
 };    
 
 
