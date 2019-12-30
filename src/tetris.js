@@ -75,7 +75,7 @@ class Block{
 			this.points[i].setY(arrayY[i]*partSize);
 			ctx.fillText("Blocks"+this.points[i].getX()+" "+this.points[i].getY(), 50, 50+i*20);
 		}
-		ctx.fillText("Game over", 100, 100);
+		//ctx.fillText("Game over", 100, 100);
 	}
 
 	getPoints(){
@@ -134,7 +134,7 @@ class Window{
 		//ctx.fillText('Game over', 100,300);
 		
 		score=score+1;
-		document.getElementById("score").innerHTML = "Score: "+score;
+		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 		//scoreText="Score: "+score;
 	}
 	
@@ -155,7 +155,7 @@ class Window{
 function init() {
     
 	//scoreText = document.getElementById("score");
-	document.getElementById("score").innerHTML = "Score: "+0;
+	document.getElementById("score").innerHTML = "YOUR SCORE: "+0;
 	score=0;
 	
     canvas = document.getElementById("myCanvas");
@@ -166,11 +166,26 @@ function init() {
     ctx.textAlign = 'center'; 
     ctx.font = 'normal bold 18px serif';
     
+    
+    //////////init images
+    redImg = new Image();
+    redImg.src = "red2.png"
+    greenImg = new Image();
+    greenImg.src = "green.png"
+    blueImg = new Image();
+    blueImg.src = "blue.png"
+    orangeImg = new Image();
+    orangeImg.src = "orange.png"
+    purpleImg = new Image();
+    purpleImg.src = "purple.png"
+    //////////
+    
+    
     testPoint=new Point(100,50);
     
-    testImg = new Image()
+    testImg = greenImg;
  
-    testImg.src = "red2.png";
+    //testImg.src = "red2.png";
 //  testImg.onload = function(){
 //	  ctx.drawImage(testImg, 0, 0);
 //  }
@@ -178,10 +193,6 @@ function init() {
     
     ctx.drawImage(testImg,testPoint.getX(),testPoint.getY(),20,20);//(img,x,y,width,height)
     //ctx.drawImage(testImg,testPoint.getX()+50,testPoint.getY()+50,20,20);//(img,x,y,width,height)
-    
-    
-    
-    
     
     
     gameWindow = new Window();
@@ -230,7 +241,7 @@ function gameOver() {
 function gameCycle() {
 	
     if (inGame) {
-    	//ctx.fillText("Game over", 100, 300);
+    	ctx.fillText("Game over", 100, 300);
         doDrawing();
         setTimeout("gameCycle()", DELAY);
     }
@@ -245,7 +256,7 @@ function send(){
 }
 
 /*
- * pewnie wolane gameCycle   (nie wiem)
+ * wykorzystac metode gameWindow.move(arrayX,arrayY)
  */
 function recive(){
 	
@@ -254,9 +265,14 @@ function recive(){
 
 /*
  * TODO
- * zamienic gameWindow.moveTestDisplay(....);
- * z
+ * zamienic z gameWindow.moveTestDisplay(....);
+ * na
  * send(....)
+ * 
+ * moveTestDisplay(...) ma tylko argumenty int,int
+ * 
+ * dla key == DOWN_KEY upadek klocka
+ * dla key == UP_KEY rotacja
  */
 onkeyup = function(e) {
     
