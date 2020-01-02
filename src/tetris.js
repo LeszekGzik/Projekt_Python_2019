@@ -2,6 +2,8 @@
  * http://usejsdoc.org/
  */
 
+var socket;
+
 var canvas;
 var ctx;
 var scoreText;
@@ -256,8 +258,35 @@ function init() {
 
 //    let alertText="HALO";
 //    alert(alertText);
+    
+    initSocket();
 }
 
+function initSocket() {
+	socket = new WebSocket("localhost:8000");
+    
+    socket.onopen = function(e) {
+    	alert("Connection established");
+    }
+    
+    socket.onmessage = function(event) {
+    	alert(`Data received from server: ${event.data}`);
+    };
+    
+    socket.onclose = function(event) {
+    	if (event.wasClean) {
+    		alert("Connection closed");
+	  	} else {
+		  // e.g. server process killed or network down
+		  // event.code is usually 1006 in this case
+		  alert("Connection died");
+	  	}
+	};
+	
+	socket.onerror = function(error) {
+	  alert(`[error] ${error.message}`);
+	};
+}
 
 
 function doDrawing() {
