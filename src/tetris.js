@@ -3,6 +3,8 @@
  */
 
 var socket;
+var HOST = "localhost";
+var PORT = "6543";
 
 var canvas;
 var ctx;
@@ -260,10 +262,11 @@ function init() {
 //    alert(alertText);
     
     initSocket();
+	socket.send("hello");
 }
 
 function initSocket() {
-	socket = new WebSocket("localhost:8000");
+	socket = new WebSocket(HOST+":"+PORT);
     
     socket.onopen = function(e) {
     	alert("Connection established");
@@ -284,7 +287,7 @@ function initSocket() {
 	};
 	
 	socket.onerror = function(error) {
-	  alert(`[error] ${error.message}`);
+		alert(`[error] ${error.message}`);
 	};
 }
 
@@ -432,10 +435,3 @@ onkeyup = function(e) {
     	}
     }
 };    
-
-
-
-
-
-
-

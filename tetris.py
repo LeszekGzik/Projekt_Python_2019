@@ -1,5 +1,5 @@
 from random import randrange
-import pygame, sys
+import pygame, sys, socket
 
 shapes = [
     [[1, 1], [1, 1]], #O shape
@@ -34,6 +34,9 @@ def check_free_space(board, shape, offset):
 class Tetris(object):
 	cols = 10
 	rows = 20
+	HOST = "localhost"
+	PORT = 6543
+	
 	def __init__(self):
         # TO DELETE
 		pygame.init()
@@ -41,9 +44,17 @@ class Tetris(object):
 		self.height = 20*self.rows
 		self.screen = pygame.display.set_mode((self.width, self.height))
         
-		self.board = [[0 for x in xrange(self.cols)] for y in xrange(self.rows)]
-		self.board += [[ 1 for x in xrange(10)]]
+		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
+		self.board += [[ 1 for x in range(10)]]
 		self.create_cube()		
+		self.sock = socket.socket()
+		self.initserver()
+		
+	def initserver(self):
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.bind((self.HOST,self.PORT))
+		sock.listen()
+		#sock.accept()
 	
     # TO DELETE - tylko na potrzeby pygame
 	def draw_board(self, matrix, offset):
@@ -94,8 +105,8 @@ class Tetris(object):
  	
 	def rotate_cube(self):
 		if not self.end and not self.pause:
-			new_cube = [ [ self.cube[y][x] for y in xrange(len(self.cube)) ]
-			for x in xrange(len(self.cube[0]) - 1, -1, -1) ]
+			new_cube = [ [ self.cube[y][x] for y in range(len(self.cube)) ]
+			for x in range(len(self.cube[0]) - 1, -1, -1) ]
 			if not check_free_space(self.board, new_cube, (self.cube_x, self.cube_y)):
 				self.cube = new_cube
 		                   	
@@ -121,14 +132,14 @@ class Tetris(object):
 							del self.board[i]
 							self.score += 100
 							self.removed_row = i
-							self.board = [[0 for j in xrange(self.cols)]] + self.board
+							self.board = [[0 for j in range(self.cols)]] + self.board
 							break
 					else:
 						break
 
 	def new_game(self):
 		if self.end:
-			self.board = [[0 for x in xrange(self.cols)] for y in xrange(self.rows)]
+			self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
 			self.create_cube()
 			self.end = False
             
@@ -182,7 +193,7 @@ class Tetris(object):
 					if event.key == eval("pygame.K_"+"SPACE"):
 						self.new_game()
 
-        exit()
+			#exit()
 
 if __name__ == '__main__':
 	tetris = Tetris()
