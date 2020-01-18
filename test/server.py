@@ -9,7 +9,7 @@ command = ""
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	server.send_message_to_all("A new client has connected")
-	global tetris
+	global tetris, command
 	print("New client connected")
 	tetris = Tetris()
 	print("Game created")
@@ -18,21 +18,22 @@ def new_client(client, server):
 	Timer(0.5, update).start()
 
 def update():
-	global tetris
+	global tetris, command
 	print("Update")
 	tetris.update(command)
+	command = ""
 	server.send_message_to_all("update")
 	Timer(0.5, update).start()
 	
 # Called for every client disconnecting
 def client_left(client, server):
-	global tetris
+	global tetris, command
 	print("Client(%d) disconnected" % client['id'])
 	command = "stop"
 
 # Called when a client sends a message
 def message_received(client, server, message):
-	global tetris
+	global tetris, command
 	print("Client said: %s" % (message))
 	command = message
 
