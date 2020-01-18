@@ -46,6 +46,34 @@ var testImg;
 var moved =false;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+function initSocket() {
+	socket = new WebSocket("http://"+HOST+":"+PORT);
+	console.log("Initialized socket");
+    
+    socket.onopen = function(e) {
+		console.log("Connection established");
+		socket.send("dupa");
+    }
+    
+    socket.onmessage = function(event) {
+    	console.log(`Data received from server: ${event.data}`);
+    };
+    
+    socket.onclose = function(event) {
+    	if (event.wasClean) {
+    		alert("Connection closed");
+	  	} else {
+		  // e.g. server process killed or network down
+		  // event.code is usually 1006 in this case
+		  alert("Connection died");
+	  	}
+	};
+	
+	socket.onerror = function(error) {
+		console.log(`[error] ${error.message}`);
+	};
+}
+
 
 class Point{
 	
@@ -206,7 +234,9 @@ class Window{
 
 
 function init() {
-    
+    //initSocket();
+	//socket.send("hello");
+	
 	//scoreText = document.getElementById("score");
 	
 	score=0;
@@ -261,34 +291,6 @@ function init() {
 //    let alertText="HALO";
 //    alert(alertText);
     
-    initSocket();
-	socket.send("hello");
-}
-
-function initSocket() {
-	socket = new WebSocket(HOST+":"+PORT);
-    
-    socket.onopen = function(e) {
-    	alert("Connection established");
-    }
-    
-    socket.onmessage = function(event) {
-    	alert(`Data received from server: ${event.data}`);
-    };
-    
-    socket.onclose = function(event) {
-    	if (event.wasClean) {
-    		alert("Connection closed");
-	  	} else {
-		  // e.g. server process killed or network down
-		  // event.code is usually 1006 in this case
-		  alert("Connection died");
-	  	}
-	};
-	
-	socket.onerror = function(error) {
-		alert(`[error] ${error.message}`);
-	};
 }
 
 

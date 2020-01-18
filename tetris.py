@@ -55,6 +55,7 @@ class Tetris(object):
 		sock.bind((self.HOST,self.PORT))
 		sock.listen()
 		#sock.accept()
+		#sock.sendall("dupa")
 	
     # TO DELETE - tylko na potrzeby pygame
 	def draw_board(self, matrix, offset):
