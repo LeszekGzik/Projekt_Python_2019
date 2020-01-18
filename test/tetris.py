@@ -145,21 +145,20 @@ class Tetris(object):
 				pauza = 0
 			else:
 				self.down()
+				if command == "left":
+					self.slide(-1)
+				if command == "right":
+					self.slide(+1)
+				if command == "down":
+					self.down()
+				if command == "up":
+					self.rotate_cube()
 				self.draw_board(self.board, (0,0)) 
 				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))   
 				#info dla Michała o bloczku coord_matrix[0] = X coord_matrix[1] = Y
 				
 				#if self.removed_row >=0: #przekazujemy Michałowi self.removed_row
 				#self.removed_row = -1
-				if command == 'left':
-					self.slide(-1)
-				if command == 'right':
-					self.slide(+1)
-				if command == 'down':
-					self.down()
-				if command == 'up':
-					self.rotate_cube()
-				command = ""
 
 		# TO DELETE
 		pygame.display.update()
