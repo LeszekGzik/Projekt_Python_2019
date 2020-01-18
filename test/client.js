@@ -1,4 +1,8 @@
 var ws;
+const LEFT_KEY = 37;
+const RIGHT_KEY = 39;
+const UP_KEY = 38;
+const DOWN_KEY = 40;
 
 function init() {
 
@@ -26,7 +30,33 @@ function init() {
 
 }
 
-function onSubmit() {
+onkeyup = function(e) {  
+    var key = e.keyCode;
+	if (key == LEFT_KEY) {
+		output("left");
+		ws.send("left");
+	}
+
+	if (key == RIGHT_KEY) {    
+		output("right");
+		ws.send("right");
+		
+	}	
+
+	if (key == UP_KEY) {
+		output("up");
+		ws.send("up");
+		
+	}	
+
+	if (key == DOWN_KEY) {
+		output("down");
+		ws.send("down");
+		
+	}
+};
+
+/*function onSubmit() {
   var input = document.getElementById("input");
   // You can send message to the Web Socket using ws.send.
   ws.send(input.value);
@@ -37,7 +67,7 @@ function onSubmit() {
 
 function onCloseClick() {
   ws.close();
-}
+}*/
 
 function output(str) {
   var log = document.getElementById("log");
