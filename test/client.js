@@ -194,11 +194,12 @@ function initWebSocket() {
 
   // Set event handlers.
   ws.onopen = function() {
-	output("onopen");
+	
   };
   
   ws.onmessage = function(e) {
 	message = e.data;
+	//koordynaty X klocka
 	if(message.charAt(0) == 'X') {
 		message = message.substring(message.indexOf(":") + 1);
 		var i;
@@ -207,6 +208,7 @@ function initWebSocket() {
 			message = message.substring(message.indexOf(",") + 1);
 		}
 	}
+	//koordynaty Y klocka
 	else if(message.charAt(0)== 'Y') {
 		message = message.substring(message.indexOf(":") + 1);
 		var i;
@@ -223,20 +225,21 @@ function initWebSocket() {
 		}
 		gameWindow.move(testArrayX,testArrayY);
 	}
+	//usuń wiersz
 	else if(message.charAt(0)== 'R') {
 		message = message.substring(message.indexOf(":") + 1);
 		rowID = parseInt(message);
-		alert("removedRow");
+		alert("removedRow");	//usunąć, tylko na potrzeby debugowania
 		gameWindow.removeRow(rowID);
 	}
   };
   
   ws.onclose = function() {
-	output("onclose");
+	alert("onclose");
   };
 
   ws.onerror = function(e) {
-	output("onerror");
+	alert("onerror");
 	console.log(e)
   };
 }
@@ -305,13 +308,6 @@ onkeyup = function(e) {
 		
 	}
 };
-
-function output(str) {
-  var log = document.getElementById("log");
-  var escaped = str.replace(/&/, "&amp;").replace(/</, "&lt;").
-	replace(/>/, "&gt;").replace(/"/, "&quot;"); // "
-  log.innerHTML = escaped + "<br>" + log.innerHTML;
-}
 
 function doDrawing() {
     
