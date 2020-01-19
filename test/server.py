@@ -20,9 +20,16 @@ def new_client(client, server):
 def update():
 	global tetris, command
 	print("Update")
-	tetris.update(command)
+	coord_matrix = tetris.update(command)
 	command = ""
-	server.send_message_to_all("update")
+	X = ""
+	Y = ""
+	for x in coord_matrix[0]:
+		X += str(x) + ", "
+	server.send_message_to_all(X)
+	for y in coord_matrix[1]:
+		Y += str(y) + ", "
+	server.send_message_to_all(Y)
 	Timer(0.5, update).start()
 	
 # Called for every client disconnecting

@@ -157,11 +157,13 @@ class Tetris(object):
 				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))   
 				#info dla Michała o bloczku coord_matrix[0] = X coord_matrix[1] = Y
 				
+				
 				#if self.removed_row >=0: #przekazujemy Michałowi self.removed_row
 				#self.removed_row = -1
 
 		# TO DELETE
 		pygame.display.update()
+		return coord_matrix
 	
 	def run(self):
 		self.score = 0	
