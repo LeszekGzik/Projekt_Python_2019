@@ -283,6 +283,7 @@ function init() {
     
     gameWindow = new Window();
     gameWindow.loadImages();
+    
     gameWindow.addBlock(new Block());
 
     gameWindow.getBlock().setPosition(testArrayX,testArrayY);

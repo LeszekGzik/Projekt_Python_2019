@@ -145,7 +145,7 @@ class Window{
 		}
 		
 		for(var i=0; i<allPoints.size(); i++){
-			if(allPoints[i].getY() > index*partSize){
+			if(allPoints[i].getY() < index*partSize){
 				this.allPoints[i].setY(allPoints[i].getY() - partSize)
 			}
 		}
