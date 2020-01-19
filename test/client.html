@@ -1,15 +1,28 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Simple client</title>
+<title>JavaScript Tetris game</title>    
+<style>
+    canvas {background: black}
+</style>
 
-  <script src="client.js"></script>
+<script src="client.js"></script>
 </head>
+    
 <body onload="init();">
-  <form onsubmit="onSubmit(); return false;">
-    <input type="text" id="input">
-    <input type="submit" value="Send">
-    <button onclick="onCloseClick(); return false;">close</button>
-  </form>
-  <div id="log"></div>
+	
+	
+	<img id="red" style="display:none" src="red2.png" alt="Red point">
+	<img id="blue" style="display:none" src="blue.png" alt="blue point">
+	<img id="green" style="display:none" src="green.png" alt="green point">
+	<img id="orange" style="display:none" src="orange.png" alt="orange point">
+	<img id="purple" style="display:none" src="purple.png" alt="purple point">
+	<p id="score"></p>
+	<p id="input"></p>
+    <canvas id="myCanvas" width="200" height="400">
+    </canvas>
+    
+    <button id="newGameBtn" onclick="newGame()" >New Game</button>
+  
 </body>
 </html>

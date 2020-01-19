@@ -19,11 +19,10 @@ def new_client(client, server):
 
 def update():
 	global tetris, command
-	print("Update")
 	coord_matrix = tetris.update(command)
 	command = ""
-	X = ""
-	Y = ""
+	X = "X:"
+	Y = "Y:"
 	for x in coord_matrix[0]:
 		X += str(x) + ", "
 	server.send_message_to_all(X)

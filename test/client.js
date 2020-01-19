@@ -199,8 +199,28 @@ function initWebSocket() {
   };
   
   ws.onmessage = function(e) {
-	// e.data contains received string.
-	output("onmessage: " + e.data);
+	message = e.data;
+	if(message.charAt(0) == 'X') {
+		message = message.substring(message.indexOf(":") + 1);
+		var i;
+		for(i = 0; i<4; i++) {
+			testArrayX[i] = parseInt(message.substring(0, message.indexOf(",")));
+			message = message.substring(message.indexOf(",") + 1);
+		}
+	}
+	else if(message.charAt(0)== 'Y') {
+		message = message.substring(message.indexOf(":") + 1);
+		var i;
+		for(i = 0; i<4; i++) {
+			testArrayY[i] = parseInt(message.substring(0, message.indexOf(",")));
+			message = message.substring(message.indexOf(",") + 1);
+		}
+		
+		if(testArrayY[0] > gameWindow.getBlock().getPoints()[0].getY) {
+			gameWindow.addBlock(new Block());
+		}
+		gameWindow.move(testArrayX,testArrayY);
+	}
   };
   
   ws.onclose = function() {
@@ -215,7 +235,7 @@ function initWebSocket() {
 
 function init() {
 	initWebSocket();
-	/*score=0;
+	score=0;
 	document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 	
 	//document.getElementById("inputField")	
@@ -244,35 +264,35 @@ function init() {
     
     
     gameWindow = new Window();
-    gameWindow.loadImages();
+    //gameWindow.loadImages();
     gameWindow.addBlock(new Block());
 
     gameWindow.getBlock().setPosition(testArrayX,testArrayY);
-    setTimeout("gameCycle()", DELAY);*/
+    setTimeout("gameCycle()", DELAY);
 
 }
 
 onkeyup = function(e) {  
     var key = e.keyCode;
 	if (key == LEFT_KEY) {
-		output("left");
+		//output("left");
 		ws.send("left");
 	}
 
 	if (key == RIGHT_KEY) {    
-		output("right");
+		//output("right");
 		ws.send("right");
 		
 	}	
 
 	if (key == UP_KEY) {
-		output("up");
+		//output("up");
 		ws.send("up");
 		
 	}	
 
 	if (key == DOWN_KEY) {
-		output("down");
+		//output("down");
 		ws.send("down");
 		
 	}
@@ -352,22 +372,7 @@ function newGame(){
 function gameCycle() {
 	
     if (inGame) {
-    	//ctx.fillText("Game over", 100, 300);
         doDrawing();
-        //TODO remove IF
-        //if for testing 
-        if(score==20){
-        	gameWindow.addBlock(new Block());
-        	//score=0;
-        	testArrayX =[1,1,1,1];
-        	testArrayY =[1,2,3,4];
-        }
-        if(score>=30){
-        	score=0;
-        	gameOver();
-        }
-        	
-        
     }
     setTimeout("gameCycle()", DELAY);
 }
