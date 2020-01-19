@@ -111,9 +111,8 @@ class Block{
 		for(var i=0;i<4;i++){
 			this.points[i].setX(arrayX[i]*partSize);
 			this.points[i].setY(arrayY[i]*partSize);
-			ctx.fillText("Blocks"+this.points[i].getX()+" "+this.points[i].getY(), 50, 50+i*20);
+			//ctx.fillText("Blocks"+this.points[i].getX()+" "+this.points[i].getY(), 50, 50+i*20);
 		}
-		//ctx.fillText("Game over", 100, 100);
 	}
 
 	getPoints(){
@@ -216,10 +215,14 @@ function initWebSocket() {
 			message = message.substring(message.indexOf(",") + 1);
 		}
 		
-		if(testArrayY[0] > gameWindow.getBlock().getPoints()[0].getY) {
-			gameWindow.addBlock(new Block());
+		for(i = 0; i<4; i++) {
+			if(testArrayY[0] == 0) {
+				gameWindow.addBlock(new Block());
+				break;
+			}
 		}
 		gameWindow.move(testArrayX,testArrayY);
+		
 	}
   };
   
