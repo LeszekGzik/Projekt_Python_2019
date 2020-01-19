@@ -138,14 +138,14 @@ class Window{
 	 * Usuwanie wiersza o danym indexie
 	 */
 	removeRow(index){
-		for(var i=0; i<allPoints.size(); i++){
-			if(allPoints[i].getY() == index*partSize){
+		for(var i=0; i < this.allPoints.length; i++){
+			if(this.allPoints[i].getY() == index*partSize){
 				this.allPoints.splice(i,1);
 			}
 		}
 		
-		for(var i=0; i<allPoints.size(); i++){
-			if(allPoints[i].getY() < index*partSize){
+		for(var i=0; i < this.allPoints.length; i++){
+			if(this.allPoints[i].getY() < index*partSize){
 				this.allPoints[i].setY(allPoints[i].getY() - partSize)
 			}
 		}
