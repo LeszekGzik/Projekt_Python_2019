@@ -141,12 +141,13 @@ class Window{
 		for(var i=0; i < this.allPoints.length; i++){
 			if(this.allPoints[i].getY() == index*partSize){
 				this.allPoints.splice(i,1);
+				i = 0;
 			}
 		}
 		
 		for(var i=0; i < this.allPoints.length; i++){
 			if(this.allPoints[i].getY() < index*partSize){
-				this.allPoints[i].setY(allPoints[i].getY() - partSize)
+				this.allPoints[i].setY(this.allPoints[i].getY() + partSize)
 			}
 		}
 		
