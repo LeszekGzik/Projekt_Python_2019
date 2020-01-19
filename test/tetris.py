@@ -144,7 +144,6 @@ class Tetris(object):
 				#info dla Michała o pauzie self.pause
 				pauza = 0
 			else:
-				self.down()
 				if command == "left":
 					self.slide(-1)
 				if command == "right":

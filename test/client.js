@@ -229,7 +229,7 @@ function initWebSocket() {
 	else if(message.charAt(0)== 'R') {
 		message = message.substring(message.indexOf(":") + 1);
 		rowID = parseInt(message);
-		alert("removedRow");	//usunąć, tylko na potrzeby debugowania
+		//alert("removedRow");	//usunąć, tylko na potrzeby debugowania
 		gameWindow.removeRow(rowID);
 	}
   };

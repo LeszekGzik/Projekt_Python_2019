@@ -19,8 +19,19 @@ def new_client(client, server):
 
 def update():
 	global tetris, command
-	coord_matrix = tetris.update(command)
-	command = ""
+	coord_matrix = tetris.update("down")
+	send_block(coord_matrix)
+		
+	if(command != ""):
+		coord_matrix = tetris.update(command)
+		send_block(coord_matrix)
+		command = ""
+		
+	Timer(0.5, update).start()
+	
+#sends the current block coords to websocket
+def send_block(coord_matrix):
+	global tetris
 	X = "X:"
 	Y = "Y:"
 	for x in coord_matrix[0]:
@@ -32,7 +43,7 @@ def update():
 	if(tetris.removed_row >= 0):
 		server.send_message_to_all("R:"+str(tetris.removed_row))
 		tetris.removed_row = -1
-	Timer(0.5, update).start()
+	
 	
 # Called for every client disconnecting
 def client_left(client, server):
