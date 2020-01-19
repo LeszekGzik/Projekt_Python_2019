@@ -222,7 +222,12 @@ function initWebSocket() {
 			}
 		}
 		gameWindow.move(testArrayX,testArrayY);
-		
+	}
+	else if(message.charAt(0)== 'R') {
+		message = message.substring(message.indexOf(":") + 1);
+		rowID = parseInt(message);
+		alert("removedRow");
+		gameWindow.removeRow(rowID);
 	}
   };
   

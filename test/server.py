@@ -29,6 +29,9 @@ def update():
 	for y in coord_matrix[1]:
 		Y += str(y) + ", "
 	server.send_message_to_all(Y)
+	if(tetris.removed_row >= 0):
+		server.send_message_to_all("R:"+str(tetris.removed_row))
+		tetris.removed_row = -1
 	Timer(0.5, update).start()
 	
 # Called for every client disconnecting
