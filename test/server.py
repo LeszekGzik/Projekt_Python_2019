@@ -38,9 +38,9 @@ def send_block(coord_matrix):
 	for y in coord_matrix[1]:
 		Y += str(y) + ", "
 	server.send_message_to_all(Y)
-	if(tetris.removed_row >= 0):
-		server.send_message_to_all("R:"+str(tetris.removed_row))
-		tetris.removed_row = -1
+	if(tetris.removed_rows >= ""):
+		server.send_message_to_all("R:"+tetris.removed_rows)
+		tetris.removed_rows = ""
 	
 # Called for every client disconnecting
 def client_left(client, server):

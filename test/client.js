@@ -220,7 +220,7 @@ function initWebSocket() {
 		}
 		
 		for(i = 0; i<4; i++) {
-			if(testArrayY[0] == 0) {
+			if((testArrayY[0] == 0)&&(testArrayY[0] < gameWindow.getBlock().points[0].getY())) {
 				gameWindow.addBlock(new Block());
 				break;
 			}
@@ -230,9 +230,14 @@ function initWebSocket() {
 	//usuń wiersz
 	else if(message.charAt(0)== 'R') {
 		message = message.substring(message.indexOf(":") + 1);
-		rowID = parseInt(message);
-		gameWindow.removeRow(rowID);
-		score += 100;
+		index = message.indexOf(",")
+		while(index > 0) {
+			rowID = parseInt(message.substring(0,index));
+			gameWindow.removeRow(rowID);
+			score += 100;
+			message = message.substring(index + 1);
+			index = message.indexOf(",")
+		}	
 		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 	}
   };

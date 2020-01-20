@@ -121,7 +121,7 @@ class Tetris(object):
 						if 0 not in j:
 							del self.board[i]
 							self.score += 100
-							self.removed_row = i
+							self.removed_rows += str(i) + ","
 							self.board = [[0 for j in range(self.cols)]] + self.board
 							break
 					else:
@@ -130,7 +130,7 @@ class Tetris(object):
 	def new_game(self):
 		#if self.end:
 		self.score = 0
-		self.removed_row = -1
+		self.removed_rows = ""
 		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
 		self.board += [[ 1 for x in range(10)]]
 		self.create_cube()
@@ -158,8 +158,8 @@ class Tetris(object):
 				self.draw_board(self.board, (0,0)) 
 				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))
 				
-				#if self.removed_row >=0: #przekazujemy Michałowi self.removed_row
-				#self.removed_row = -1
+				#if self.removed_rows >=0: #przekazujemy Michałowi self.removed_rows
+				#self.removed_rows = -1
 			if command == "pause":
 				self.pause = not self.pause
 
@@ -170,7 +170,7 @@ class Tetris(object):
 	
 	def run(self):
 		self.score = 0	
-		self.removed_row = -1
+		self.removed_rows = ""
 		self.end = False
 		
 		
