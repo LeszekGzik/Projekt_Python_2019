@@ -44,7 +44,7 @@ class Tetris(object):
         
 		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
 		self.board += [[ 1 for x in range(10)]]
-		self.create_cube()		
+		#self.create_cube()		
 	
     # TO DELETE - tylko na potrzeby pygame
 	def draw_board(self, matrix, offset):
@@ -128,10 +128,14 @@ class Tetris(object):
 						break
 
 	def new_game(self):
-		if self.end:
-			self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
-			self.create_cube()
-			self.end = False
+		#if self.end:
+		self.score = 0
+		self.removed_row = -1
+		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
+		self.board += [[ 1 for x in range(10)]]
+		self.create_cube()
+		self.end = False
+		self.pause = False
 	
 	def update(self,command):
 		self.screen.fill((0,0,0))
@@ -140,10 +144,8 @@ class Tetris(object):
 			#przekazujemy self.score
 			exit()
 		else:
-			if self.pause:
+			if not self.pause:
 				#info dla Michała o pauzie self.pause
-				pauza = 0
-			else:
 				if command == "left":
 					self.slide(-1)
 				if command == "right":
@@ -151,15 +153,17 @@ class Tetris(object):
 				if command == "down":
 					self.down()
 				if command == "up":
-					self.rotate_cube()
-				self.draw_board(self.board, (0,0)) 
-				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))   
+					self.rotate_cube() 
 				#info dla Michała o bloczku coord_matrix[0] = X coord_matrix[1] = Y
-				
+				self.draw_board(self.board, (0,0)) 
+				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))
 				
 				#if self.removed_row >=0: #przekazujemy Michałowi self.removed_row
 				#self.removed_row = -1
+			if command == "pause":
+				self.pause = not self.pause
 
+		 
 		# TO DELETE
 		pygame.display.update()
 		return coord_matrix
@@ -168,7 +172,7 @@ class Tetris(object):
 		self.score = 0	
 		self.removed_row = -1
 		self.end = False
-		self.pause = False
+		
 		
 	
 	def exit(self):

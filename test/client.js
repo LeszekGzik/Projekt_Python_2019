@@ -36,6 +36,7 @@ const LEFT_KEY = 37;
 const RIGHT_KEY = 39;
 const UP_KEY = 38;
 const DOWN_KEY = 40;
+const P_KEY = 80;
 
 class Point{
 	
@@ -230,8 +231,9 @@ function initWebSocket() {
 	else if(message.charAt(0)== 'R') {
 		message = message.substring(message.indexOf(":") + 1);
 		rowID = parseInt(message);
-		//alert("removedRow");	//usunąć, tylko na potrzeby debugowania
 		gameWindow.removeRow(rowID);
+		score += 100;
+		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 	}
   };
   
@@ -287,26 +289,23 @@ function init() {
 onkeyup = function(e) {  
     var key = e.keyCode;
 	if (key == LEFT_KEY) {
-		//output("left");
 		ws.send("left");
 	}
 
 	if (key == RIGHT_KEY) {    
-		//output("right");
 		ws.send("right");
-		
 	}	
 
 	if (key == UP_KEY) {
-		//output("up");
 		ws.send("up");
-		
 	}	
 
 	if (key == DOWN_KEY) {
-		//output("down");
 		ws.send("down");
-		
+	}
+	
+	if (key == P_KEY) {
+		ws.send("pause");
 	}
 };
 
@@ -371,6 +370,7 @@ function newGame(){
 		inGame = true;
     	document.getElementById("input").innerHTML="";
 	}
+	ws.send("new");
     //init();
 }
  

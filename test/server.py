@@ -4,19 +4,17 @@ from threading import Timer
 
 tetris = 0
 command = ""
-
+first_run = True
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
-	server.send_message_to_all("A new client has connected")
-	global tetris, command
+	#server.send_message_to_all("A new client has connected")
+	global tetris
 	print("New client connected")
 	tetris = Tetris()
 	print("Game created")
-	tetris.run()
-	print("Game run")
-	Timer(0.5, update).start()
 
+#runs one update cycle of the game and sends current state to client
 def update():
 	global tetris, command
 	coord_matrix = tetris.update("down")
@@ -44,7 +42,6 @@ def send_block(coord_matrix):
 		server.send_message_to_all("R:"+str(tetris.removed_row))
 		tetris.removed_row = -1
 	
-	
 # Called for every client disconnecting
 def client_left(client, server):
 	global tetris, command
@@ -53,9 +50,14 @@ def client_left(client, server):
 
 # Called when a client sends a message
 def message_received(client, server, message):
-	global tetris, command
+	global tetris, command, first_run
 	print("Client said: %s" % (message))
 	command = message
+	if(command == "new"):
+		tetris.new_game()
+		if first_run:
+			update()
+			first_run = False
 
 PORT=9001
 server = WebsocketServer(PORT)
