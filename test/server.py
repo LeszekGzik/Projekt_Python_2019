@@ -87,7 +87,7 @@ def send_highscores():
 			if(score > max):
 				max = score
 				max_line = line
-		server.send_message_to_all("H:"+max_line)
+		server.send_message_to_all("H:"+str(i+1)+") "+max_line)
 		content.remove(max_line)
 	file.close()
 		

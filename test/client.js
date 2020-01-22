@@ -18,6 +18,9 @@ var greenImg;
 var orangeImg;
 var purpleImg;
 
+var highScoresReceived = 0; //required for highscore displaying
+var highScoresString = "";
+
 const partSize=20;
 const startX=60; //starting pos. for test
 const startY=60;
@@ -240,10 +243,16 @@ function initWebSocket() {
 		}	
 		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 	}
-	
+	//wyświetlanie rekordów
 	else if(message.charAt(0)== 'H') {
 		message = message.substring(message.indexOf(":") + 1);
-		console.log(message);
+		highScoresString += message + "\n";
+		highScoresReceived++;
+		if(highScoresReceived == 5) {
+			alert(highScoresString);
+			highScoresReceived = 0;
+			highScoresString = "";
+		}
 	}
 	
 	//koniec gry
