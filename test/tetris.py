@@ -139,11 +139,9 @@ class Tetris(object):
 	
 	def update(self,command):
 		self.screen.fill((0,0,0))
-		if self.end:
-			#info dla Michała o końcu gry
-			#przekazujemy self.score
-			exit()
-		else:
+		if not self.end:
+			if command == "pause":
+				self.pause = not self.pause
 			if not self.pause:
 				#info dla Michała o pauzie self.pause
 				if command == "left":
@@ -155,16 +153,9 @@ class Tetris(object):
 				if command == "up":
 					self.rotate_cube() 
 				#info dla Michała o bloczku coord_matrix[0] = X coord_matrix[1] = Y
-				self.draw_board(self.board, (0,0)) 
-				coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))
-				
-				#if self.removed_rows >=0: #przekazujemy Michałowi self.removed_rows
-				#self.removed_rows = -1
-			if command == "pause":
-				self.pause = not self.pause
-
-		 
 		# TO DELETE
+		self.draw_board(self.board, (0,0)) 
+		coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))
 		pygame.display.update()
 		return coord_matrix
 	
@@ -172,8 +163,3 @@ class Tetris(object):
 		self.score = 0	
 		self.removed_rows = ""
 		self.end = False
-		
-		
-	
-	def exit(self):
-		sys.exit()

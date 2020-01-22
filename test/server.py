@@ -16,7 +16,7 @@ def new_client(client, server):
 
 #runs one update cycle of the game and sends current state to client
 def update():
-	global tetris, command
+	global tetris, command,first_run
 	coord_matrix = tetris.update("down")
 	send_block(coord_matrix)
 		
@@ -24,8 +24,11 @@ def update():
 		coord_matrix = tetris.update(command)
 		send_block(coord_matrix)
 		command = ""
-		
-	Timer(0.5, update).start()
+	if(tetris.end):
+		first_run = True
+		server.send_message_to_all("End")
+	else:
+		Timer(0.5, update).start()
 	
 #sends the current block coords to websocket
 def send_block(coord_matrix):
@@ -55,10 +58,20 @@ def message_received(client, server, message):
 	command = message
 	if(command == "new"):
 		tetris.new_game()
-		if first_run:
-			update()
+		command = ""
+		if(first_run):
 			first_run = False
+			update()
+	elif(command[:5]=="NICK:"):
+		command = command[5:]
+		save_score(command)
 
+def save_score(nick):
+	global tetris
+	file = open("highscores.hs","a+")
+	file.write(nick + ":" + str(tetris.score) +"\n")
+	file.close();
+		
 PORT=9001
 server = WebsocketServer(PORT)
 server.set_fn_new_client(new_client)

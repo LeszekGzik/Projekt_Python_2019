@@ -230,15 +230,20 @@ function initWebSocket() {
 	//usuń wiersz
 	else if(message.charAt(0)== 'R') {
 		message = message.substring(message.indexOf(":") + 1);
-		index = message.indexOf(",")
+		index = message.indexOf(",");
 		while(index > 0) {
 			rowID = parseInt(message.substring(0,index));
 			gameWindow.removeRow(rowID);
 			score += 100;
 			message = message.substring(index + 1);
-			index = message.indexOf(",")
+			index = message.indexOf(",");
 		}	
 		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
+	}
+	
+	//koniec gry
+	else if(message == "End") {
+		gameOver();
 	}
   };
   
@@ -348,12 +353,12 @@ function gameOver() {
     //nick input prompt
     var nick = prompt("Enter your nick", "NoName");
 
-    //TODO do if wstawic send(nick)
     if (nick != null) {
-      document.getElementById("input").innerHTML =
-      "Hello " + nick + "! How are you today?";
+      //document.getElementById("input").innerHTML =
+      //"Hello " + nick + "! How are you today?";
       //newGame();
       //init();//jesli cos innego to nie dziala
+	  ws.send("NICK:"+nick);
     } 
     
 }
