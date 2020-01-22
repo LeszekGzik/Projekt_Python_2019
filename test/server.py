@@ -65,12 +65,31 @@ def message_received(client, server, message):
 	elif(command[:5]=="NICK:"):
 		command = command[5:]
 		save_score(command)
+	elif(command=="HS"):
+		send_highscores()
 
+#saves the player's score to the highscores.hs file
 def save_score(nick):
 	global tetris
 	file = open("highscores.hs","a+")
 	file.write(nick + ":" + str(tetris.score) +"\n")
 	file.close();
+	
+def send_highscores():
+	with open("highscores.hs","r") as file:
+		content = file.readlines()
+	content = [x.strip() for x in content]
+	for i in range(5):
+		max = -1
+		max_line = ""
+		for line in content:
+			score = int(line[line.find(':')+1:])
+			if(score > max):
+				max = score
+				max_line = line
+		server.send_message_to_all("H:"+max_line)
+		content.remove(max_line)
+	file.close()
 		
 PORT=9001
 server = WebsocketServer(PORT)

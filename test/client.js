@@ -241,10 +241,17 @@ function initWebSocket() {
 		document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
 	}
 	
+	else if(message.charAt(0)== 'H') {
+		message = message.substring(message.indexOf(":") + 1);
+		console.log(message);
+	}
+	
 	//koniec gry
 	else if(message == "End") {
 		gameOver();
 	}
+	
+	
   };
   
   ws.onclose = function() {
@@ -382,6 +389,11 @@ function newGame(){
 	}
 	ws.send("new");
     //init();
+}
+
+function getHighScores() {
+	ws.send("HS");
+	
 }
  
 function gameCycle() {
