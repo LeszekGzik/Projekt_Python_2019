@@ -8,27 +8,27 @@ first_run = True
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
-	#server.send_message_to_all("A new client has connected")
-	global tetris
+	global tetris, first_run
 	print("New client connected")
 	tetris = Tetris()
 	print("Game created")
+	first_run = True
 
 #runs one update cycle of the game and sends current state to client
 def update():
-	global tetris, command,first_run
-	coord_matrix = tetris.update("down")
-	send_block(coord_matrix)
-		
-	if(command != ""):
-		coord_matrix = tetris.update(command)
-		send_block(coord_matrix)
-		command = ""
-	if(tetris.end):
-		first_run = True
-		server.send_message_to_all("End")
-	else:
-		Timer(0.5, update).start()
+	global tetris, command, first_run
+	if(not command == "stop"):
+		coord_matrix = tetris.update("down")
+		send_block(coord_matrix)	
+		if(command != ""):
+			coord_matrix = tetris.update(command)
+			send_block(coord_matrix)
+			command = ""
+		if(tetris.end):
+			first_run = True
+			server.send_message_to_all("End")
+		else:
+			Timer(0.5, update).start()
 	
 #sends the current block coords to websocket
 def send_block(coord_matrix):
@@ -68,13 +68,14 @@ def message_received(client, server, message):
 	elif(command=="HS"):
 		send_highscores()
 
-#saves the player's score to the highscores.hs file
+#Saves the player's score to the highscores.hs file
 def save_score(nick):
 	global tetris
 	file = open("highscores.hs","a+")
 	file.write(nick + ":" + str(tetris.score) +"\n")
 	file.close();
 	
+#Sends the top 5 scores from highscores.hs file to the player
 def send_highscores():
 	with open("highscores.hs","r") as file:
 		content = file.readlines()
@@ -91,6 +92,7 @@ def send_highscores():
 		content.remove(max_line)
 	file.close()
 		
+#initialize everything
 PORT=9001
 server = WebsocketServer(PORT)
 server.set_fn_new_client(new_client)

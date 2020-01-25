@@ -259,8 +259,6 @@ function initWebSocket() {
 	else if(message == "End") {
 		gameOver();
 	}
-	
-	
   };
   
   ws.onclose = function() {
@@ -277,9 +275,6 @@ function init() {
 	initWebSocket();
 	score=0;
 	document.getElementById("score").innerHTML = "YOUR SCORE: "+score;
-	
-	//document.getElementById("inputField")	
-	
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
      
@@ -336,23 +331,15 @@ onkeyup = function(e) {
 };
 
 function doDrawing() {
-    
-	
     ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
 
     if(inGame){
-    	
     	for(var i=0; i < gameWindow.getAllPoints().length; i++){
-    		//ctx.drawImage(gameWindow.getImage(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);//(img,x,y,width,height)
-    		ctx.drawImage(gameWindow.getAllPoints()[i].getImg(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);//(img,x,y,width,height)
-        	
-    		//ctx.darwImage(pointImg,window.getAllPoints()[i].getX(), window.getAllPoints()[i].getY())
-    		
+    		ctx.drawImage(gameWindow.getAllPoints()[i].getImg(), gameWindow.getAllPoints()[i].getX(), gameWindow.getAllPoints()[i].getY(),20,20);
     	}
     }else{
     	gameOver();
     }   
-    //ctx.fillText("Game over", 100, 150);
 }
 
 function gameOver() {
@@ -370,10 +357,6 @@ function gameOver() {
     var nick = prompt("Enter your nick", "NoName");
 
     if (nick != null) {
-      //document.getElementById("input").innerHTML =
-      //"Hello " + nick + "! How are you today?";
-      //newGame();
-      //init();//jesli cos innego to nie dziala
 	  ws.send("NICK:"+nick);
     } 
     
@@ -383,11 +366,9 @@ function newGame(){
 	score=0;
 	
 	if(inGame==true){
-		//gameWindow.getAllPoints().clear();
 		gameWindow.clearAllPoints();
 		gameWindow.addBlock(new Block());
 		gameWindow.getBlock().setPosition(testArrayX,testArrayY);
-		//TODO send info about new game
 	}else{
 		gameWindow.clearAllPoints();
 		gameWindow.addBlock(new Block());
@@ -397,16 +378,13 @@ function newGame(){
     	document.getElementById("input").innerHTML="";
 	}
 	ws.send("new");
-    //init();
 }
 
 function getHighScores() {
 	ws.send("HS");
-	
 }
  
 function gameCycle() {
-	
     if (inGame) {
         doDrawing();
     }
