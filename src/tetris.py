@@ -36,13 +36,13 @@ class Tetris(object):
 	rows = 20
 	
 	def __init__(self):
-        # TO DELETE
 		self.width = 20*self.cols
 		self.height = 20*self.rows
 		self.score = 0
 		self.removed_rows = ""
 		self.end = False
 		self.pause = False
+		self.first_run = True
 
 		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
 		self.board += [[ 1 for x in range(10)]]	

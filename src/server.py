@@ -2,81 +2,89 @@ from websocket_server import WebsocketServer
 from tetris import Tetris
 from threading import Timer
 
-tetris = 0
-command = ""
+tetris = [""]
+command = [""]
 first_run = True
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
-	global tetris, first_run
-	print("New client connected")
-	tetris = Tetris()
+	global tetris, command, first_run
+	id = client['id']
+	print("New client(%d) connected" % id)
+	tetris.insert(id, Tetris())
+	command.insert(id, "")
 	print("Game created")
-	first_run = True
+	#tetris[id].first_run = True
 
 #runs one update cycle of the game and sends current state to client
-def update():
+def update(client):
 	global tetris, command, first_run
-	if(not command == "stop"):
-		coord_matrix = tetris.update("down")
-		send_block(coord_matrix)	
-		if(command != ""):
-			coord_matrix = tetris.update(command)
-			send_block(coord_matrix)
-			command = ""
-		if(tetris.end):
-			first_run = True
-			server.send_message_to_all("End")
+	id = client['id']
+	#print("Updating game (%d)" % id)
+	if(not command[id] == "stop"):
+		coord_matrix = tetris[id].update("down")
+		send_block(client, coord_matrix)	
+		if(command[id] != ""):
+			coord_matrix = tetris[id].update(command[id])
+			send_block(client, coord_matrix)
+			command[id] = ""
+		if(tetris[id].end):
+			tetris[id].first_run = True
+			server.send_message(client,"End")
 		else:
-			Timer(0.5, update).start()
+			Timer(0.5, update, args = [client]).start()
 	
 #sends the current block coords to websocket
-def send_block(coord_matrix):
+def send_block(client, coord_matrix):
 	global tetris
+	id = client['id']
 	X = "X:"
 	Y = "Y:"
 	for x in coord_matrix[0]:
 		X += str(x) + ", "
-	server.send_message_to_all(X)
+	server.send_message(client, X)
 	for y in coord_matrix[1]:
 		Y += str(y) + ", "
-	server.send_message_to_all(Y)
-	if(tetris.removed_rows >= ""):
-		server.send_message_to_all("R:"+tetris.removed_rows)
-		tetris.removed_rows = ""
+	server.send_message(client, Y)
+	if(tetris[id].removed_rows >= ""):
+		server.send_message(client, "R:"+tetris[id].removed_rows)
+		tetris[client['id']].removed_rows = ""
 	
 # Called for every client disconnecting
 def client_left(client, server):
 	global tetris, command
-	print("Client(%d) disconnected" % client['id'])
-	command = "stop"
+	id = client['id']
+	print("Client(%d) disconnected" % id)
+	command[id] = "stop"
 
 # Called when a client sends a message
 def message_received(client, server, message):
 	global tetris, command, first_run
-	print("Client said: %s" % (message))
-	command = message
-	if(command == "new"):
-		tetris.new_game()
-		command = ""
-		if(first_run):
-			first_run = False
-			update()
-	elif(command[:5]=="NICK:"):
-		command = command[5:]
-		save_score(command)
-	elif(command=="HS"):
-		send_highscores()
+	id = client['id']
+	print("Client(%d) said: %s" % (id, message))
+	command[id] = message
+	if(command[id] == "new"):
+		tetris[id].new_game()
+		command[id] = ""
+		if(tetris[id].first_run):
+			tetris[id].first_run = False
+			update(client)
+	elif(command[id][:5]=="NICK:"):
+		command[id] = command[id][5:]
+		save_score(client, command[id])
+	elif(command[id]=="HS"):
+		send_highscores(client)
 
 #Saves the player's score to the highscores.hs file
-def save_score(nick):
+def save_score(client, nick):
 	global tetris
+	id = client['id']
 	file = open("highscores.hs","a+")
-	file.write(nick + ":" + str(tetris.score) +"\n")
+	file.write(nick + ":" + str(tetris[id].score) +"\n")
 	file.close();
 	
 #Sends the top 5 scores from highscores.hs file to the player
-def send_highscores():
+def send_highscores(client):
 	with open("highscores.hs","r") as file:
 		content = file.readlines()
 	content = [x.strip() for x in content]
@@ -88,7 +96,7 @@ def send_highscores():
 			if(score > max):
 				max = score
 				max_line = line
-		server.send_message_to_all("H:"+str(i+1)+") "+max_line)
+		server.send_message(client,"H:"+str(i+1)+") "+max_line)
 		content.remove(max_line)
 	file.close()
 		
