@@ -1,5 +1,5 @@
 from random import randrange
-import pygame, sys, socket
+import sys, socket
 
 shapes = [
     [[1, 1], [1, 1]], #O shape
@@ -37,10 +37,8 @@ class Tetris(object):
 	
 	def __init__(self):
         # TO DELETE
-		pygame.init()
 		self.width = 20*self.cols
 		self.height = 20*self.rows
-		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.score = 0
 		self.removed_rows = ""
 		self.end = False
@@ -49,22 +47,6 @@ class Tetris(object):
 		self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
 		self.board += [[ 1 for x in range(10)]]	
 		self.create_cube()
-	
-    # TO DELETE - tylko na potrzeby pygame
-	def draw_board(self, matrix, offset):
-		offset_x = offset[0]
-		offset_y  = offset[1]
-		for y, row in enumerate(matrix):
-			for x, val in enumerate(row):
-				if val:
-					pygame.draw.rect(
-						self.screen,
-						(0,   0,   255),
-						pygame.Rect(
-							(offset_x+x) * 20,
-							(offset_y+y) * 20, 
-							20,
-							20),0)
     	
 	def create_cube(self):
 		index = randrange(len(shapes))
@@ -83,15 +65,6 @@ class Tetris(object):
 		for y, row in enumerate(matrix):
 			for x, val in enumerate(row):
 				if val:
-                    #TO DELETE
-					pygame.draw.rect(
-						self.screen,
-						(0,   0,   255),
-						pygame.Rect(
-							(offset_x+x) * 20,
-							(offset_y+y) * 20, 
-							20,
-							20),0)
 					coord_x.append((offset_x+x))
 					coord_y.append((offset_y+y))
 		coord_matrix = [coord_x, coord_y]
@@ -141,7 +114,6 @@ class Tetris(object):
 		self.pause = False
 	
 	def update(self,command):
-		self.screen.fill((0,0,0))
 		if not self.end:
 			if command == "pause":
 				self.pause = not self.pause
@@ -155,10 +127,7 @@ class Tetris(object):
 				if command == "up":
 					self.rotate_cube() 
 
-		# TO DELETE
-		self.draw_board(self.board, (0,0)) 
 		coord_matrix = self.draw_cube(self.cube, (self.cube_x, self.cube_y))
-		pygame.display.update()
 		return coord_matrix
 	
 	def run(self):
